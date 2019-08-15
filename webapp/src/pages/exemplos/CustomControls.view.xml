@@ -103,17 +103,16 @@
 		<content>
 
 			<quillEditor:QuillEditor value="{htmlEditor>/value}" />
-			<Panel>
-
-			<Toolbar design="Info" style="Clear">
-				<Title text="Resultado" />
-			</Toolbar>
+			<Panel expandable="true" expanded="false">
+			<headerToolbar>
+				<Toolbar design="Info" style="Clear">
+					<Title text="Resultado HTML" />
+				</Toolbar>
+			</headerToolbar>
 				<content>
 					<Text text="{htmlEditor>/value}" />
 				</content>
 			</Panel>
-
-
 		</content>
 	</Panel>
 	<Panel expandable="true" expanded="false" width="auto" class="sapUiResponsiveMargin">
