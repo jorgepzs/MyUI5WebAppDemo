@@ -1,4 +1,6 @@
-
+.sapUiBodyBackground, .sapUiBody{
+	background-color: #3F5161 !important;
+}
 .loginBG:before {
 	content: "";
 	position: inherit;
@@ -21,3 +23,4 @@
 	filter: brightness(3.5);
 	max-height: 1.5em;
 }
+
