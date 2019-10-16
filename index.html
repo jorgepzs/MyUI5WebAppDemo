@@ -14,19 +14,17 @@
   </script>
   <script>
     sap.ui.getCore().attachInit(function () {
-      sap.ui.require([
-        "sap/m/Shell",
+      sap.ui.require([        
         "sap/ui/core/ComponentContainer"
-      ], function (Shell, ComponentContainer) {
+      ], function (ComponentContainer) {
         sap.ui.component({
           async: true,
           name: "MyUI5WebApp"
         }).then(function (oComp) {
-          new Shell({
-            app: new ComponentContainer({
+           new ComponentContainer({
               height: "100%",
               component: oComp
-            })
+           
           }).placeAt("content");
         });
       });
