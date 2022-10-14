@@ -67,8 +67,8 @@ sap.ui.define(
 			let toogleButton = this.byId("sideNavigationToggleButton");
 			if(toogleButton.getEnabled()) return;
 
-			var model = new RestModel();
-			model.get(this.getServerUrl("AppModel.json"))
+			var model = this.createLocalRestModel("AppModel.json")
+			model.get()
 			.then(
 				(data)=>{
 						toogleButton.setEnabled(true)

@@ -13,11 +13,11 @@ sap.ui.define(
 		onInit : function () {
 			this.setModel(new RestModel(),"signature");
 			this.setModel(new RestModel(),"SelectedCenterCosts");
-      this.setModel(new RestModel(),"htmlEditor");
-      this.ConfgQRCode();
-			this.setModel(new RestModel(this.getServerUrl("Distribuition.json")), "Dimensions");
-    },
-    ConfgQRCode(){
+			this.setModel(new RestModel(),"htmlEditor");
+			this.ConfgQRCode();
+			
+		},
+		ConfgQRCode(){
 			const qrData = {ItemCode: "I00001", ItemName:"Nome do item"};
 			const valueStr = JSON.stringify(qrData);
 			const qrCodeModelData = {ValueString: valueStr, Value: qrData}

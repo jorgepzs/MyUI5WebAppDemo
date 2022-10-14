@@ -2,7 +2,9 @@ sap.ui.define([
 		"sap/ui/core/mvc/Controller",
 		"MyUI5WebApp/src/pages/exceptions/Exeption.controller",
 		"MyUI5WebApp/model/formatter",
-	], function (Controller, Exeption, formatter) {
+		"MyUI5WebApp/model/RestModel",
+		
+	], function (Controller, Exeption, formatter, RestModel) {
 	"use strict";
 
 	return Controller.extend("MyUI5WebApp.src.app.BaseController", {
@@ -106,9 +108,39 @@ sap.ui.define([
 			localStorage.removeItem(path);
 		},
 
-    extractObjects: (oEvent) => {
+    	extractObjects: (oEvent) => {
 			let objects = oEvent.getParameter("selectedContexts").map(x => x.getObject())
 			return objects;
+		},
+		createRestModel(path) {
+			
+			const uri = path.startsWith("http") ? path : this.getServerUrl(path);
+			const model = new RestModel();
+			model.setUrl(uri);
+			return model;
+
+		},
+		createLocalRestModel(path) {
+			console.log("sucess log")
+			
+			const uri = path.startsWith("http") ? path : this.getLocalUrl(path);
+			const model = new RestModel();
+			model.setUrl(uri);
+			return model;
+
+		},
+
+		getLocalUrl() {
+			let base = [];
+			let serve = this.getOwnerComponent().getMetadata().getConfig().localDataUrl;
+			base.push(serve);
+
+			for (let index = 0; index < arguments.length; index++) {
+				const element = arguments[index];
+				base.push(element);
+			}
+
+			return base.join('/');
 		},
 	});
 });

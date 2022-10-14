@@ -72,28 +72,6 @@
 	<Panel expandable="true" expanded="false" width="auto" class="sapUiResponsiveMargin">
 		<headerToolbar>
 			<Toolbar height="3rem" style="Clear">
-				<Title text="Centros de custo" />
-
-				<ToolbarSpacer />
-			</Toolbar>
-		</headerToolbar>
-		<content>
-				<FlexBox
-					alignItems="Center"
-					direction="Column"
-					justifyContent="SpaceBetween">
-					<items>
-					<core:Fragment fragmentName="MyUI5WebApp.src.pages.centercosts.CenterCostsShow" type="XML"> </core:Fragment>
-
-					</items>
-				</FlexBox>
-		</content>
-	</Panel>
-
-
-	<Panel expandable="true" expanded="false" width="auto" class="sapUiResponsiveMargin">
-		<headerToolbar>
-			<Toolbar height="3rem" style="Clear">
 				<Title text="Html Editor" />
 				<Button icon="sap-icon://signature" text="Preencher " press="fillHtmlValue" />
 

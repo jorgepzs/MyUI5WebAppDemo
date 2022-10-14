@@ -2,166 +2,220 @@ jQuery.sap.require("sap.ui.model.json.JSONModel");
 
 sap.ui.model.json.JSONModel.extend(
 	"MyUI5WebApp.model.RestModel",
-  {
-		baseUrl: "",
-		fillData : true,
-		requestSettings: {
-			crossDomain: true,
-			dataType: "json",
-			headers: {
-				"Accept-Language": "pt-BR",
-				"Content-Language": "pt-BR"
-			},
-			xhrFields: {
-				withCredentials: false
-			},
-			credentials: 'include'
+	{
+		constructor: function (oData) {
+			sap.ui.model.ClientModel.apply(this, arguments);
+			this._headers = this.getHeahers()
+			this._request = this.getRequest();
+
+			if (oData && typeof oData === 'object') this.setData(oData)
+
 		},
 
-		setWithCredentials(boolValue){
-			this.xhrFields.withCredentials = boolValue;
-		},
-		setBaseUrl(url){
-			this.baseUrl = url;
+		getRequest() {
+			const request = {
+				method: "GET",
+				mode: "cors",
+				headers: this._headers
+			}
+			return request;
 		},
 
-		request(url, busyControl)  {
+		getHeahers() {
+			const headers = new Headers();
+			headers.append("Accept-Language", "pt-BR")
+			headers.append("Content-Language", "pt-BR")
+			headers.append("Content-Type", "application/json")
+			return headers;
+		},
 
-			let that = this;
-			if (busyControl) busyControl.setBusy(true);
+		addHeader(name, value) {
+			this._headers.append(name, value);
+		},
+
+		_headers: {},
+		_request: {},
+		_url: null,
+		_busy: null,
+		fillData: false,
+
+		setUrl(url) {
+			this._url = url;
+			this.setUserToken();
+		},
+
+		removeCredentials() {
+			delete this._request.credentials;
+		},
+		includeCredentials() {
+			this._request.credentials = "include";
+		},
+
+		request(url) {
 
 			const finaly = function () {
-				if (busyControl) busyControl.setBusy(false);
+				if (this._busy && this._busy.setBusy) this._busy.setBusy(false);
 			};
-			let promisseResolution = (resolve, reject) =>
-			{
-				fetch(url, this.requestSettings)
-				.then((response) => {
-					that.response = response;
-					if (!response.ok && response.status == 400){
-						response.json().then(jsonError => {
-							reject(jsonError);
-						})
-					}else if (!response.ok && response.status == 404){
-						resolve(null);
-					}else if (!response.ok && response.status == 401){
-						response.json().then(jsonError =>{
-							reject(jsonError);
-						})
-					}else if (response.ok && response.status == 204){
-						resolve(null)
-					}
-					else{
-						if(that.fillData){
-							response.json().then(dataJSON =>{
-								if(dataJSON.value != undefined)
-									that.setData(dataJSON.value);
-								else
-									that.setData(dataJSON);
+			const that = this;
+			let promisseResolution = (resolve, reject) => {
 
+				fetch(url, this._request)
+					.then((response) => {
+						if (!response.ok) {
+							that.response = response;
+							that.response.text().then(textError => {
+								const ex = { message: textError, Message: textError };
+								reject(ex);
+							})
+
+							return;
+						}
+
+						if (that.fillData) {
+							response.json().then(dataJSON => {
+								that.setData(dataJSON);
 								resolve(dataJSON);
 							});
-						}else{
+							that.fillData = false;
+						} else {
 							resolve(response);
 						}
-					}
-				})
-				.catch(err =>{
-					that.response = response;
-					err.json().then(jsonError =>{
-						reject(jsonError);
+
 					})
-				})
-				.finally(finaly);
+					.catch(err => {
+						that.response = response;
+						err.json().then(jsonError => {
+							reject(jsonError);
+						})
+					})
+					.finally(finaly.apply(this));
 			}
 
 			return new Promise(promisseResolution);
+		},
+
+		setFillData(fill) {
+			this.fillData = fill;
+			return this;
+		},
+
+		setBusy(control) {
+			this._busy = control;
+			this._busy.setBusy(true);
+			return this;
+		},
+
+		get(path) {
+			this.valid()
+			this._request.method = "GET";
+			let uri = this.getFullUrl(path)
+			this.fillData = true;
+			return this.request(uri);
+		},
+
+		getFullUrl(path) {
+			if (!path) return this._url;
+			if (typeof path !== 'string' && typeof path !== 'number') return this._url;
+
+			return this._url + `/${path}`;
 
 		},
 
-		getResponse: function () {
-			return this.oResponse;
+		put(path) {
+			this.valid();
+			this._request.method = "PUT";
+			this._request.body = JSON.stringify(this.getData());
+			let uri = this.getFullUrl(path)
+			return this.request(uri);
+
+		},
+		patch(path) {
+			this.valid()
+
+			this._request.method = "PATCH";
+			this._request.body = JSON.stringify(this.getData());
+			let uri = this.getFullUrl(path)
+			return this.request(uri);
+		},
+		post(path) {
+			this.valid();
+			this._request.method = "POST";
+			this._request.body = JSON.stringify(this.getData());
+			let uri = this.getFullUrl(path)
+			return this.request(uri);
 		},
 
-		post: function (url, controlToBusy) {
-			let data = JSON.stringify(this.getData());
-			this.requestSettings.body = data;
-			this.requestSettings.method = "POST";
-			url = url || this.baseUrl;
-			return this.request(url, controlToBusy);
+		setFillData(fill) {
+			this.fillData = fill;
+			return this;
 		},
 
-		put: function (url, controlToBusy) {
-			url = url || this.baseUrl;
-			let data = JSON.stringify(this.getData());
-			this.requestSettings.body = data;
-			this.requestSettings.method = "PUT";
-			return this.request(url, controlToBusy);
+		delete(path) {
+			this.valid()
+			this._request.method = "DELETE";
+			this._request.body = JSON.stringify(this.getData());
+			let uri = this.getFullUrl(path)
+			return this.request(uri);
 		},
 
-		patch: function (url, controlToBusy) {
-			url = url || this.baseUrl;
-			let data = JSON.stringify(this.getData());
-			this.requestSettings.body = data;
-			this.requestSettings.method = "PATCH";
-			return this.request(url, controlToBusy);
-		},
-
-		get(url, controlToBusy) {
-			url = url || this.baseUrl;
-			this.requestSettings.method = "GET";
-			delete this.requestSettings.body;
-			return this.request(url, controlToBusy);
-		},
-
-		delete: function (url, controlToBusy) {
-			this.requestSettings.method = "DELETE";
-			return this.request(url, controlToBusy);
-		},
-
-		setHeader(name, value) {
-			this.requestSettings.headers[name] = value;
-		},
-		setCrossDomain(boolValue){
-			this.requestSettings.crossDomain= boolValue;
-		},
-		includeCredentials(value){
-			this.requestSettings.credentials = 'include' | value;
-		},
-		removeIncludeCredentials(){
-			delete this.requestSettings.credentials;
-		},
-		read(controlToBusy){
-			if(this.baseUrl == "") {
-				console.log("Para utilizar esse método é necessário informar a URL base");
-				return;
+		valid() {
+			if (!this._url) {
+				console.log("A URL não foi informada no RestModel");
 			}
-			let url = this.baseUrl;
-			return this.get(url, controlToBusy);
-		},
-		update(controlToBusy){
-			if(this.baseUrl == "") {
-				console.log("Para utilizar esse método é necessário informar a URL base");
-				return;
-			}
-			let url = this.baseUrl;
-			return this.patch(url, controlToBusy);
-		},
-		create(controlToBusy){
-			if(this.baseUrl == "") {
-				console.log("Para utilizar esse método é necessário informar a URL base");
-				return;
-			}
-			let url = this.baseUrl;
-			return this.post(url, controlToBusy);
-		},
-		remove(controlToBusy){
-			if(this.baseUrl == "") {
-				console.log("Para utilizar esse método é necessário informar a URL base");
-				return;
-			}
-			let url = this.baseUrl;
-			return this.delete(url, controlToBusy);
 		},
 
+		setUserToken() {
+			const userSession = this.getItem("currentUser");
+			if (this._url.includes("autenticar")) return;
+			//if(this._headers.)
+			this.addHeader('Authorization', 'bearer ' + userSession.Token);
+
+		},
+
+		getItem(path) {
+			let strData = localStorage.getItem(path)
+			if (!strData || strData == '') return null;
+
+			return JSON.parse(strData);
+		},
+
+		getZipCode(serverUrl) {
+			let request = jQuery.get(serverUrl);
+			return request;
+		},
+
+		findZipCode(serverUrl) {
+			return new Promise((resolve, reject) => {
+				this.getZipCode(serverUrl)
+					.then(resp => {
+						let zipData = {
+							"CEP": resp.cep,
+							"Rua": resp.logradouro,
+							"Bairro": resp.bairro,
+							"Cidade": resp.cidade,
+							"Estado": resp.estado,
+						}
+						resolve(zipData);
+					})
+					.catch(err => reject(err));
+			});
+		},
+
+		getCnpj(serverUrl) {
+			let request = jQuery.get(serverUrl);
+			return request;
+		},
+
+		findCnpj : function(serverUrl) {
+
+			return new Promise((resolve, reject) => {
+				this.getCnpj(serverUrl)
+					.then(resp => {
+						resolve(resp);
+					})
+					.catch(err => reject(err));
+			});
+			
+		}
 	});
+
