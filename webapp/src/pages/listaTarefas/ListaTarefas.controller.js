@@ -14,13 +14,6 @@ sap.ui.define(
 			
 		},
 
-		onItemPress(oEvent){		
-			console.log(oEvent.getSource().getBindingContext().getObject());
-		}
-
-		
-
-
 	});
 
 });
