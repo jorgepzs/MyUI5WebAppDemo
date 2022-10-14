@@ -84,9 +84,9 @@
           "target": "login"
         },
         {
-          "pattern": "dashBoard",
-          "name": "dashBoard",
-          "target": "dashBoard"
+          "pattern": "listaTarefas",
+          "name": "listaTarefas",
+          "target": "listaTarefas"
         },
         {
           "pattern": "settings/:userName:",
@@ -106,11 +106,11 @@
       ],
 
       "targets": {
-        "dashBoard": {
-          "viewName": "DashBoard",
+        "listaTarefas": {
+          "viewName": "ListaTarefas",
           "viewLevel": 2,
           "transition": "flip",
-          "viewPath": "MyUI5WebApp.src.pages.dashboard"
+          "viewPath": "MyUI5WebApp.src.pages.listaTarefas"
         },
         "settings": {
           "viewName": "Edit",
