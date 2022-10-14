@@ -10,7 +10,7 @@
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	controllerName="MyUI5WebApp.src.pages.dashboard.DashBoard">
 
-	<Page title="{i18n>App.DasboardTitle}" >
+	<Page title="{i18n>App.ListaTarefas}" >
 		<content>			
 			
 		</content>

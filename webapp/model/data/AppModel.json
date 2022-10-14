@@ -1,8 +1,8 @@
 {
   "navigation": [
     {
-      "title": "Commom.Home",
-      "icon": "sap-icon://bbyd-dashboard",
+      "title": "Commom.ListaTarefas",
+      "icon": "sap-icon://activities",
       "expanded": true,
       "key": "dashBoard"
     },
