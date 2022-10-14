@@ -11,10 +11,7 @@ sap.ui.define(
 	return BaseController.extend("MyUI5WebApp.src.pages.listaTarefas.ListaTarefas", {
 
 		onInit : function () {
-			this.listModel = this.createRestModel("todos");
-			this.listModel.get();
-			this.getView().setModel(this.listModel);
-
+			
 		},
 
 		onItemPress(oEvent){		
