@@ -11,8 +11,15 @@
     controllerName="MyUI5WebApp.src.pages.detalhes.detalhes">
 
     <Page title="{i18n>Commom.Detalhes}">
-        <content>
-            <Text text="Um Text deu certo" />
+        <content showNavButton="true" navButtonPress=".onNavBack> ">
+            <ObjectHeader
+                title="ID: {todo>Id}  "
+            >
+
+                <ObjectAttribute text="UserID: {todo>userId}" />
+                <ObjectAttribute text="Title: {todo>title}" />
+                <ObjectAttribute text="Completed:  {todo>completed}" />
+            </ObjectHeader>
         </content>
     </Page>
 </core:View>

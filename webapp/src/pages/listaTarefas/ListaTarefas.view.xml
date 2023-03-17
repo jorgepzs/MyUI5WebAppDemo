@@ -41,11 +41,13 @@
 
 					<ColumnListItem>
 						<cells>
-							<ObjectIdentifier
-								title="{todo>id}" />
 							<Button icon="sap-icon://accelerated"
 								press=".onPress"
-								type="Transparent" id="buttomDetails"/>
+								type="Transparent" id="buttomDetails" />
+							<ObjectIdentifier
+								title="{todo>id}" />
+
+
 							<Text
 								text="{todo>title}" />
 

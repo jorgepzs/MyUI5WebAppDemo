@@ -1,35 +1,29 @@
 sap.ui.define(
-  ["sap/ui/core/mvc/Controller", "sap/ui/core/routing/History"],
-  function (Controller, History) {
+  ["sap/ui/core/mvc/Controller", ],
+  function (Controller) {
     "use strict";
 
-    return Controller.extend(
-      "sap.ui.core.sample.RoutingMasterDetail.routingApp.controller.Detail1",
-      {
-        onInit: function () {
-          this.getOwnerComponent()
-            .getRouter()
-            .getRoute("detalhes")
-            .attachPatternMatched(this._onRouteMatched, this);
-        },
-        // _onRouteMatched: function (oEvent) {
-        //   this._orderId = oEvent.getParameter("arguments").orderId;
-        //   this.getView().bindElement("/orders/" + this._orderId);
-        // },
+    return Controller.extend("MyUI5WebApp.src.pages.detalhes.detalhes", {
+      onInit: function () {
+        var oRouter = this.getOwnerComponent().getRouter();
+        oRouter
+          .getRoute("detalhes")
+          .attachPatternMatched(this._onObjectMatched, this);
+      },
 
-        onNavBack: function () {
-          var sPreviousHash = History.getInstance().getPreviousHash();
+      __onObjectMatched: function (oEvent) {
+        this.getView().bindElement({
+          path:
+            "/" +
+            window.decodeURIComponent(
+              oEvent.getParameter("arguments").todoPath
+            ),
+          model: "todo",
+        });
+        console.log(todoPath);
+      },
 
-          //The history contains a previous entry
-          if (sPreviousHash !== undefined) {
-            history.go(-1);
-          } else {
-            // There is no history!
-            // Naviate to master page
-            this.getOwnerComponent().getRouter().navTo("master", {}, true);
-          }
-        },
-      }
-    );
+      onNavBack: function () {},
+    });
   }
 );

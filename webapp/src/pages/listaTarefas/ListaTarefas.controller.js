@@ -12,10 +12,14 @@ sap.ui.define(
       "MyUI5WebApp.src.pages.listaTarefas.ListaTarefas",
       {
         onPress: function (oEvent) {
-			var oTodo = oEvent.getSource();
-			this.getRouter().navTo("detalhes")
-			console.log(oTodo.getBindingContext("todo"));
-		
+          var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+          var oItem = oEvent.getSource();
+
+          oRouter.navTo("detalhes", {
+            todoPath: window.encodeURIComponent(
+              oItem.getBindingContext("todo").getPath().substr(1)
+            ),
+          });
         },
         onFilterTodo: function (oEvent) {
           var aFilter = [];

@@ -64,6 +64,10 @@
         "uri": "https://jsonplaceholder.typicode.com/todos"
       }
     },
+    "": {
+      "dataSource": "<dataSourceAlias>",
+      "settings": {}
+    },
 
     "routing": {
       "config": {
@@ -106,6 +110,11 @@
           "pattern": "languages",
           "name": "languages",
           "target": "languages"
+        },
+        {
+          "pattern": "detalhes/{todoPath}",
+          "name": "detalhes",
+          "target": "detalhes"
         }
       ],
 
@@ -146,8 +155,8 @@
         },
         "detalhes": {
           "viewName": "detalhes",
-          "viewLevel": 3,
-          "viewPath": "MyUI5WebApp.src.pages.detalhes"
+          "viewPath": "MyUI5WebApp.src.pages.detalhes",
+          "id": "detalhes"
         }
       }
     }
