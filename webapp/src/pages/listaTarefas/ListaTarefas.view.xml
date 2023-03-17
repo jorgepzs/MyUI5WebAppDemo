@@ -10,9 +10,51 @@
 	xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	controllerName="MyUI5WebApp.src.pages.listaTarefas.ListaTarefas">
 
-	<Page title="{i18n>Commom.ListaTarefas}" >
-		<content>			
-			
+	<Page title="{i18n>Commom.ListaTarefas}">
+		<content>
+			<Table id="todosTable"
+				items="{todo>/}">
+				<headerToolbar>
+					<OverflowToolbar>
+						<Title text="{i18n>Commom.ListaTarefas}" level="H2" />
+						<ToolbarSpacer />
+						<SearchField width="50%" search=".onFilterTodo" />
+					</OverflowToolbar>
+				</headerToolbar>
+				<columns>
+					<Column>
+						<Text text="{i18n>Commom.Detalhes}" />
+					</Column>
+
+					<Column>
+						<Text text="{i18n>Commom.Identificador}" />
+					</Column>
+					<Column
+						width="14em">
+						<Text text="{i18n>Commom.Title}" />
+					</Column>
+					<Column hAlign="End">
+						<Text text="{i18n>Commom.Status}" />
+					</Column>
+				</columns>
+				<items>
+
+					<ColumnListItem>
+						<cells>
+							<ObjectIdentifier
+								title="{todo>id}" />
+							<Button icon="sap-icon://accelerated"
+								press=".onPress"
+								type="Transparent" id="buttomDetails"/>
+							<Text
+								text="{todo>title}" />
+
+							<CheckBox selected="{todo>completed}" />
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
 		</content>
 	</Page>
+
 </core:View>
